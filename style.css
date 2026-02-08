@@ -1,5 +1,5 @@
 /* =========================
-   RESET & BASE - MOBILE FIRST
+   MOBILE FIRST RESET
 ========================= */
 * {
   box-sizing: border-box;
@@ -7,14 +7,25 @@
   padding: 0;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Force mobile rendering */
+html {
+  font-size: 16px;
+  width: 100vw;
+  overflow-x: hidden;
 }
 
 html, body {
   width: 100%;
+  width: 100vw;
   height: 100%;
+  min-height: 100vh;
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
+  position: relative;
 }
 
 body {
@@ -23,6 +34,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   touch-action: manipulation;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* =========================
@@ -33,7 +48,7 @@ body {
 }
 
 /* =========================
-   APP ROOT CONTAINER - FULL VIEWPORT
+   APP ROOT - FULL SCREEN MOBILE
 ========================= */
 #app-root {
   position: fixed;
@@ -42,22 +57,28 @@ body {
   right: 0;
   bottom: 0;
   width: 100vw;
+  width: 100%;
   height: 100vh;
   height: 100dvh;
   height: 100svh;
+  max-width: 100vw;
   background: #ffffff;
   overflow: hidden;
   overscroll-behavior: none;
+  margin: 0;
+  padding: 0;
 }
 
 /* =========================
-   SCREENS - FULL APP VIEWS
+   SCREENS - FULL VIEWPORT
 ========================= */
 .screen {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100vw;
   width: 100%;
+  max-width: 100vw;
   height: 100%;
   height: 100dvh;
   height: 100svh;
@@ -66,9 +87,9 @@ body {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 0;
+  margin: 0;
   opacity: 0;
   transition: opacity 0.3s ease;
-  will-change: opacity;
 }
 
 .screen:not([hidden]) {
@@ -76,11 +97,13 @@ body {
 }
 
 /* =========================
-   CARD CONTAINER - MOBILE FULL SCREEN
+   CARD - FULL MOBILE APP
 ========================= */
 .card {
   position: relative;
+  width: 100vw;
   width: 100%;
+  max-width: 100vw;
   min-height: 100%;
   min-height: 100dvh;
   min-height: 100svh;
@@ -91,47 +114,75 @@ body {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
   background: #ffffff;
-}
-
-/* =========================
-   CONTENT AREA - PROPER MOBILE SPACING
-========================= */
-.card > *:not(.back-btn) {
-  width: 100%;
-  padding-left: max(1rem, env(safe-area-inset-left, 1rem));
-  padding-right: max(1rem, env(safe-area-inset-right, 1rem));
+  margin: 0;
+  overflow-x: hidden;
   box-sizing: border-box;
 }
 
-/* Header area with dynamic safe area */
+/* =========================
+   CONTENT CONTAINER - FORCE MOBILE WIDTH
+========================= */
+.card-content {
+  width: 100%;
+  max-width: 100vw;
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make ALL direct children use card-content constraints */
+.card > *:not(.back-btn) {
+  width: 100%;
+  max-width: 100vw;
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  box-sizing: border-box;
+}
+
+/* Header area */
 .card h1 {
-  padding-top: max(2rem, env(safe-area-inset-top, 2rem));
+  padding-top: max(2rem, calc(env(safe-area-inset-top) + 1rem));
   padding-bottom: 0.5rem;
-  font-size: clamp(1.75rem, 5vw, 2rem);
+  font-size: min(2rem, 8vw);
+  text-align: center;
+  width: 100%;
 }
 
 .card .subtitle {
   padding-top: 0;
   padding-bottom: 1.5rem;
-  font-size: clamp(1rem, 4vw, 1.125rem);
+  font-size: min(1.125rem, 5vw);
+  text-align: center;
+  width: 100%;
+  line-height: 1.4;
 }
 
-/* Form elements with responsive sizing */
+/* =========================
+   FORM ELEMENTS - MOBILE WIDTH
+========================= */
 .card input,
 .card button:not(.back-btn) {
-  margin-left: max(1rem, env(safe-area-inset-left, 1rem));
-  margin-right: max(1rem, env(safe-area-inset-right, 1rem));
-  width: calc(100% - max(2rem, env(safe-area-inset-left, 1rem) + env(safe-area-inset-right, 1rem)));
-  font-size: clamp(1rem, 4vw, 1.125rem);
-  padding: clamp(1rem, 4vw, 1.125rem) 1.25rem;
+  width: calc(100% - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  max-width: calc(100vw - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  font-size: min(1.125rem, 5vw);
+  padding: min(1.125rem, 5vw) min(1.25rem, 5vw);
+  box-sizing: border-box;
 }
 
-/* Hint area at bottom */
+/* Hint area */
 .card .hint {
   margin-top: auto;
   padding-top: 1.5rem;
-  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));
-  font-size: clamp(0.75rem, 3vw, 0.875rem);
+  padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem));
+  font-size: min(0.875rem, 4vw);
+  text-align: center;
+  width: 100%;
 }
 
 /* =========================
@@ -141,19 +192,14 @@ body {
   background: none;
   border: none;
   color: #6366f1;
-  font-size: clamp(1rem, 4vw, 1.125rem);
-  padding: 1rem max(1rem, env(safe-area-inset-left, 1rem));
+  font-size: min(1.125rem, 5vw);
+  padding: 1rem max(1rem, env(safe-area-inset-left));
   margin: 0;
   width: auto;
+  max-width: 100vw;
   text-align: left;
   cursor: pointer;
   z-index: 10;
-  position: relative;
-}
-
-.back-btn:hover {
-  background: none;
-  color: #4f46e5;
 }
 
 /* =========================
@@ -163,8 +209,11 @@ body {
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 1.5rem 0;
-  padding: 0 max(1rem, env(safe-area-inset-left, 1rem));
+  margin: 1.5rem auto;
+  padding: 0 max(1rem, env(safe-area-inset-left));
+  width: calc(100% - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  max-width: calc(100vw - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  box-sizing: border-box;
 }
 
 .divider::before,
@@ -177,126 +226,20 @@ body {
 .divider span {
   padding: 0 1rem;
   color: #9ca3af;
-  font-size: clamp(0.75rem, 3vw, 0.875rem);
+  font-size: min(0.875rem, 4vw);
 }
 
 /* =========================
-   LINK STYLES
-========================= */
-.link {
-  color: #6366f1;
-  text-decoration: none;
-  font-weight: 500;
-  cursor: pointer;
-  transition: color 0.2s ease;
-  font-size: inherit;
-}
-
-.link:hover {
-  text-decoration: underline;
-  color: #4f46e5;
-}
-
-.terms-link {
-  color: #6366f1;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.terms-link:hover {
-  text-decoration: underline;
-}
-
-/* =========================
-   LOGIN LINK IN HINT - SPECIFIC STYLING */
-.card .hint .link {
-  color: #6366f1;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.card .hint .link:hover {
-  text-decoration: underline;
-  background: rgba(99, 102, 241, 0.1);
-}
-
-/* =========================
-   PLAN SELECTION - MOBILE OPTIMIZED
+   PLAN SELECTION
 ========================= */
 .plan-selection {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin: 1rem max(1rem, env(safe-area-inset-left, 1rem));
-}
-
-.plan-option {
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: #ffffff;
-  font-size: clamp(0.875rem, 3.5vw, 1rem);
-}
-
-.plan-option:hover {
-  border-color: #d1d5db;
-}
-
-.plan-option.selected {
-  border-color: #6366f1;
-  background: #f0f9ff;
-}
-
-.plan-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.plan-name {
-  font-weight: 600;
-  font-size: clamp(1rem, 4vw, 1.125rem);
-  color: #1f2933;
-}
-
-.plan-badge {
-  font-size: clamp(0.625rem, 2.5vw, 0.75rem);
-  padding: 0.25rem 0.5rem;
-  border-radius: 12px;
-  background: #6366f1;
-  color: white;
-  font-weight: 500;
-}
-
-.plan-option:nth-child(2) .plan-badge {
-  background: #10b981;
-}
-
-.plan-price {
-  font-size: clamp(1.25rem, 5vw, 1.5rem);
-  font-weight: 700;
-  color: #1f2933;
-  margin-bottom: 0.25rem;
-}
-
-.period {
-  font-size: clamp(0.75rem, 3vw, 0.875rem);
-  font-weight: 400;
-  color: #6b7280;
-  margin-left: 0.25rem;
-}
-
-.plan-desc {
-  font-size: clamp(0.75rem, 3vw, 0.875rem);
-  color: #6b7280;
+  margin: 1rem auto;
+  width: calc(100% - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  max-width: calc(100vw - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  box-sizing: border-box;
 }
 
 /* =========================
@@ -306,97 +249,27 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  margin: 1rem max(1rem, env(safe-area-inset-left, 1rem));
-  padding: 0.5rem 0;
-  font-size: clamp(0.75rem, 3vw, 0.875rem);
-}
-
-.terms input[type="checkbox"] {
-  margin-top: 0.25rem;
-  width: auto;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.terms label {
-  font-size: clamp(0.75rem, 3vw, 0.875rem);
-  color: #6b7280;
-  line-height: 1.4;
-  cursor: pointer;
+  margin: 1rem auto;
+  width: calc(100% - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  max-width: calc(100vw - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  box-sizing: border-box;
 }
 
 /* =========================
-   APP VIEW SPECIFIC
+   APP VIEW ELEMENTS
 ========================= */
-.app-header {
-  text-align: center;
-}
-
-.user-email {
-  color: #6b7280;
-  font-size: clamp(0.75rem, 3vw, 0.875rem);
-  margin-bottom: 1.5rem;
-}
-
 .app-actions {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin: 1rem max(1rem, env(safe-area-inset-left, 1rem));
-}
-
-.app-action-btn {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: clamp(1rem, 4vw, 1.25rem);
-  background: #f9fafb;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  text-align: left;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.app-action-btn:hover {
-  background: #f3f4f6;
-  border-color: #d1d5db;
-}
-
-.action-icon {
-  font-size: clamp(1.25rem, 5vw, 1.5rem);
-}
-
-.action-text {
-  font-size: clamp(0.875rem, 3.5vw, 1rem);
-  font-weight: 500;
-  color: #1f2933;
+  margin: 1rem auto;
+  width: calc(100% - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  max-width: calc(100vw - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  box-sizing: border-box;
 }
 
 /* =========================
-   TYPOGRAPHY
-========================= */
-h1 {
-  font-weight: 700;
-  color: #1f2933;
-  line-height: 1.2;
-  margin-bottom: 0.5rem;
-}
-
-.subtitle {
-  color: #6b7280;
-  line-height: 1.5;
-  font-weight: 400;
-}
-
-.hint {
-  color: #9ca3af;
-  line-height: 1.4;
-  text-align: center;
-}
-
-/* =========================
-   INPUTS
+   INPUTS & BUTTONS
 ========================= */
 input {
   display: block;
@@ -406,6 +279,7 @@ input {
   transition: all 0.2s ease;
   color: #1f2933;
   min-height: 44px;
+  font-size: 16px; /* Prevent iOS zoom */
 }
 
 input:focus {
@@ -419,9 +293,6 @@ input::placeholder {
   color: #9ca3af;
 }
 
-/* =========================
-   BUTTONS
-========================= */
 button:not(.back-btn) {
   display: block;
   border-radius: 12px;
@@ -433,6 +304,7 @@ button:not(.back-btn) {
   color: #ffffff;
   margin-top: 0.5rem;
   min-height: 44px;
+  font-size: min(1.125rem, 5vw);
 }
 
 button:active:not(.back-btn) {
@@ -451,11 +323,23 @@ button:active:not(.back-btn) {
 }
 
 /* =========================
+   LINK STYLES
+========================= */
+.link {
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-size: inherit;
+}
+
+/* =========================
    TOAST POPUP
 ========================= */
 .toast {
   position: fixed;
-  bottom: max(2rem, env(safe-area-inset-bottom, 2rem) + 1rem);
+  bottom: max(2rem, calc(env(safe-area-inset-bottom) + 1rem));
   left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: rgba(0, 0, 0, 0.95);
@@ -463,14 +347,11 @@ button:active:not(.back-btn) {
   padding: 1rem 1.5rem;
   border-radius: 12px;
   font-size: 0.95rem;
-  max-width: min(90%, 400px);
-  box-shadow: 
-    0 10px 25px rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+  max-width: min(90vw, 400px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   z-index: 10000;
-  backdrop-filter: blur(10px);
 }
 
 .toast.show {
@@ -478,218 +359,71 @@ button:active:not(.back-btn) {
   transform: translateX(-50%) translateY(0);
 }
 
-.toast.error {
-  background: rgba(185, 28, 28, 0.95);
-}
-
-.toast.success {
-  background: rgba(4, 120, 87, 0.95);
-}
-
 /* =========================
-   RESPONSIVE DESIGN
+   DESKTOP FALLBACK
 ========================= */
-@media screen and (min-width: 768px) {
-  #app-root {
-    max-width: 100%;
-    margin: 0 auto;
-  }
-  
-  .card > *:not(.back-btn) {
-    max-width: 420px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .card input,
-  .card button:not(.back-btn),
-  .plan-selection,
-  .terms,
-  .app-actions {
-    max-width: 420px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .plan-selection {
-    flex-direction: row;
-  }
-  
-  .plan-option {
-    flex: 1;
-  }
-}
-
-/* =========================
-   LANDSCAPE MODE OPTIMIZATION
-========================= */
-@media screen and (orientation: landscape) and (max-height: 500px) {
-  .card {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-  }
-  
-  .card h1 {
-    font-size: 1.5rem;
-    padding-top: 0.25rem;
-    margin-bottom: 0.25rem;
-  }
-  
-  .card .subtitle {
-    font-size: 0.875rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .card input,
-  .card button:not(.back-btn) {
-    padding: 0.5rem 0.75rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-  }
-  
-  .card .hint {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    font-size: 0.75rem;
-  }
-  
-  .plan-selection {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .plan-option {
-    padding: 0.75rem;
-  }
-}
-
-/* =========================
-   DARK MODE SUPPORT
-========================= */
-@media (prefers-color-scheme: dark) {
+@media screen and (min-width: 768px) and (min-height: 600px) {
   body {
-    background: #000000;
-    color: #ffffff;
+    background: #f5f5f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
   }
   
-  #app-root,
-  .screen,
+  #app-root {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    min-height: auto;
+    max-height: 90vh;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .screen {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: auto;
+  }
+  
   .card {
-    background: #000000;
-  }
-  
-  h1 {
-    color: #ffffff;
-  }
-  
-  .subtitle {
-    color: #d1d5db;
-  }
-  
-  .hint {
-    color: #9ca3af;
-  }
-  
-  /* Login link in dark mode */
-  .card .hint .link {
-    color: #60a5fa;
-  }
-  
-  .card .hint .link:hover {
-    background: rgba(96, 165, 250, 0.1);
-  }
-  
-  input {
-    background: #111827;
-    border-color: #374151;
-    color: #ffffff;
-  }
-  
-  input:focus {
-    background: #1f2933;
-    border-color: #6366f1;
-  }
-  
-  input::placeholder {
-    color: #6b7280;
-  }
-  
-  button:not(.back-btn) {
-    background: #ffffff;
-    color: #000000;
-  }
-  
-  button:not(.back-btn):active {
-    background: #e5e7eb;
-  }
-  
-  .secondary-btn {
-    background: #374151;
-    color: #ffffff;
-    border-color: #4b5563;
-  }
-  
-  .secondary-btn:active {
-    background: #4b5563;
-  }
-  
-  .back-btn {
-    color: #60a5fa;
-  }
-  
-  .back-btn:hover {
-    color: #93c5fd;
-  }
-  
-  .divider span {
-    color: #6b7280;
-  }
-  
-  .divider::before,
-  .divider::after {
-    border-color: #374151;
-  }
-  
-  .plan-option {
-    background: #111827;
-    border-color: #374151;
-  }
-  
-  .plan-option.selected {
-    background: #1e3a8a;
-    border-color: #6366f1;
-  }
-  
-  .plan-name {
-    color: #ffffff;
-  }
-  
-  .plan-price {
-    color: #ffffff;
-  }
-  
-  .app-action-btn {
-    background: #111827;
-    border-color: #374151;
-  }
-  
-  .app-action-btn:hover {
-    background: #1f2933;
-  }
-  
-  .action-text {
-    color: #ffffff;
-  }
-  
-  .terms-link {
-    color: #60a5fa;
+    width: 100%;
+    min-height: auto;
+    max-height: none;
+    border-radius: 24px;
   }
 }
 
 /* =========================
-   IOS SPECIFIC FIXES
+   MOBILE FORCE - NO MEDIA QUERY OVERRIDES
+========================= */
+@media screen and (max-width: 767px) {
+  html, body, #app-root, .screen, .card {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+  
+  .card > * {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+}
+
+/* =========================
+   CRITICAL IOS FIXES
 ========================= */
 @supports (-webkit-touch-callout: none) {
+  html, body {
+    height: -webkit-fill-available;
+  }
+  
   #app-root {
     height: -webkit-fill-available;
   }
@@ -702,49 +436,47 @@ button:active:not(.back-btn) {
     min-height: -webkit-fill-available;
   }
   
-  input, select, textarea {
+  /* Prevent iOS zoom on input focus */
+  input, textarea {
     font-size: 16px !important;
   }
+  
+  /* Prevent elastic scrolling */
+  body {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
 }
 
 /* =========================
-   PREVENT BLUE HIGHLIGHT ON TAP
+   ANDROID CHROME FIX
 ========================= */
-* {
-  -webkit-tap-highlight-color: transparent;
+@supports (-webkit-touch-callout: none) and (not (-webkit-overflow-scrolling: touch)) {
+  html, body {
+    height: 100%;
+    position: fixed;
+    overflow: hidden;
+  }
 }
 
 /* =========================
-   SMOOTH SCROLLING
+   VIEWPORT HEIGHT FALLBACK
 ========================= */
-.screen, .card {
-  scroll-behavior: smooth;
-}
-
-/* =========================
-   FIX FOR VIRTUAL KEYBOARD ON MOBILE
-========================= */
-@media screen and (max-height: 500px) {
-  .card {
-    padding-top: 0.5rem;
+@media (max-height: 500px) {
+  .card h1 {
+    padding-top: max(1rem, env(safe-area-inset-top));
+    font-size: min(1.5rem, 7vw);
   }
   
-  .card h1 {
-    padding-top: 0.5rem;
-  }
-}
-
-/* =========================
-   VERY SMALL SCREENS
-========================= */
-@media screen and (max-width: 320px) {
-  .card h1 {
-    font-size: 1.5rem;
-    padding-top: max(1.5rem, env(safe-area-inset-top, 1.5rem));
+  .card .subtitle {
+    padding-bottom: 1rem;
+    font-size: min(1rem, 4.5vw);
   }
   
   .card input,
   .card button:not(.back-btn) {
-    padding: 0.875rem 1rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
   }
 }
