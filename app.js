@@ -1,191 +1,209 @@
-import { auth, db } from "../firebase.js";
+// app.js - Navigation handling with mobile fixes
 
-import {
-  signInWithEmailAndPassword,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-import {
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-
-
-const screens = {
-  login: document.getElementById("login-view"),
-  subscribe: document.getElementById("subscribe-view"),
-  locked: document.getElementById("locked-view"),
-  app: document.getElementById("app-view")
-};
-
-function showScreen(name) {
-  Object.values(screens).forEach(screen => {
-    screen.hidden = true;
-  });
-
-  if (screens[name]) {
-    screens[name].hidden = false;
+document.addEventListener('DOMContentLoaded', () => {
+  // Mobile viewport height fix
+  function setAppHeight() {
+    const appRoot = document.getElementById('app-root');
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    
+    if (appRoot) {
+      appRoot.style.height = window.innerHeight + 'px';
+    }
   }
-}
 
-document.getElementById("subscribe-btn").addEventListener("click", () => {
-  showScreen("subscribe");
-});
+  // Set initial height
+  setAppHeight();
 
-
-
-const toast = document.getElementById("toast");
-let toastTimer;
-
-function showToast(message, type = "error") {
-  if (!toast) return;
-
-  clearTimeout(toastTimer);
-
-  toast.textContent = message;
-  toast.className = `toast ${type}`;
-  toast.hidden = false;
-
-  requestAnimationFrame(() => {
-    toast.classList.add("show");
+  // Update on resize and orientation change
+  window.addEventListener('resize', setAppHeight);
+  window.addEventListener('orientationchange', () => {
+    setTimeout(setAppHeight, 100);
   });
 
-  toastTimer = setTimeout(() => {
-    toast.classList.remove("show");
+  // Get all screen elements
+  const loginView = document.getElementById('login-view');
+  const subscribeView = document.getElementById('subscribe-view');
+  const lockedView = document.getElementById('locked-view');
+  const appView = document.getElementById('app-view');
+  
+  // Get all navigation buttons/links
+  const subscribeBtn = document.getElementById('subscribe-btn');
+  const backBtn = document.getElementById('back-btn');
+  const loginLink = document.getElementById('login-link');
+  const loginBtn = document.getElementById('login-btn');
+  const createAccountBtn = document.getElementById('create-account-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+  const manageSubscriptionBtn = document.getElementById('manage-subscription-btn');
+  
+  // Function to show a specific screen and hide others
+  function showScreen(screenToShow) {
+    // Hide all screens
+    [loginView, subscribeView, lockedView, appView].forEach(screen => {
+      screen.hidden = true;
+    });
+    
+    // Show the requested screen
+    screenToShow.hidden = false;
+    
+    // Update viewport height when switching screens
+    setTimeout(setAppHeight, 50);
+  }
+  
+  // Navigation event listeners
+  
+  // Login screen -> Subscribe screen
+  subscribeBtn?.addEventListener('click', () => {
+    showScreen(subscribeView);
+  });
+  
+  // Subscribe screen -> Login screen (Back button)
+  backBtn?.addEventListener('click', () => {
+    showScreen(loginView);
+  });
+  
+  // Subscribe screen -> Login screen (Login link)
+  loginLink?.addEventListener('click', (e) => {
+    e.preventDefault();
+    showScreen(loginView);
+  });
+  
+  // Login screen -> App screen (Simulated login)
+  loginBtn?.addEventListener('click', () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    if (!email || !password) {
+      showToast('Please enter both email and password', 'error');
+      return;
+    }
+    
+    if (!isValidEmail(email)) {
+      showToast('Please enter a valid email address', 'error');
+      return;
+    }
+    
+    // Store user email for display in app
+    document.getElementById('user-email').textContent = email;
+    showScreen(appView);
+    showToast('Login successful!', 'success');
+  });
+  
+  // Subscribe screen -> App screen (Simulated account creation)
+  createAccountBtn?.addEventListener('click', () => {
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+    const agreeTerms = document.getElementById('agree-terms').checked;
+    
+    if (!email || !password || !confirmPassword) {
+      showToast('Please fill in all required fields', 'error');
+      return;
+    }
+    
+    if (!isValidEmail(email)) {
+      showToast('Please enter a valid email address', 'error');
+      return;
+    }
+    
+    if (password.length < 6) {
+      showToast('Password must be at least 6 characters', 'error');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      showToast('Passwords do not match', 'error');
+      return;
+    }
+    
+    if (!agreeTerms) {
+      showToast('Please agree to the terms and conditions', 'error');
+      return;
+    }
+    
+    // Store user email for display in app
+    document.getElementById('user-email').textContent = email;
+    showScreen(appView);
+    showToast('Account created successfully!', 'success');
+  });
+  
+  // App screen -> Login screen (Logout)
+  logoutBtn?.addEventListener('click', () => {
+    showScreen(loginView);
+    showToast('Logged out successfully', 'success');
+  });
+  
+  // Locked screen -> Subscribe screen (Manage subscription)
+  manageSubscriptionBtn?.addEventListener('click', () => {
+    showScreen(subscribeView);
+  });
+  
+  // Plan selection functionality
+  const planOptions = document.querySelectorAll('.plan-option');
+  planOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      // Remove selected class from all options
+      planOptions.forEach(opt => opt.classList.remove('selected'));
+      // Add selected class to clicked option
+      option.classList.add('selected');
+    });
+  });
+  
+  // Toast notification function
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast ' + type;
+    toast.hidden = false;
+    toast.classList.add('show');
+    
     setTimeout(() => {
-      toast.hidden = true;
-    }, 300);
-  }, 3000);
-}
-
-
-function normalizeAuthError(err) {
-  if (!err || !err.code) {
-    return "Something went wrong. Please try again.";
+      toast.classList.remove('show');
+      setTimeout(() => {
+        toast.hidden = true;
+      }, 300);
+    }, 3000);
   }
-
-  switch (err.code) {
-    case "auth/invalid-credential":
-    case "auth/wrong-password":
-      return "Incorrect email or password.";
-
-    case "auth/user-not-found":
-      return "No account found with this email.";
-
-    case "auth/invalid-email":
-      return "Please enter a valid email address.";
-
-    case "auth/user-disabled":
-      return "This account has been disabled.";
-
-    case "auth/too-many-requests":
-      return "Too many attempts. Please wait and try again.";
-
-    case "auth/network-request-failed":
-      return "Network error. Check your connection.";
-
-    default:
-      return "Unable to sign in right now.";
+  
+  // Email validation function
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
-}
-
-
-
-/* =========================
-   UI ELEMENTS
-========================= */
-const loginView = document.getElementById("login-view");
-const lockedView = document.getElementById("locked-view");
-const appView = document.getElementById("app-view");
-
-function show(view) {
-  loginView.hidden = true;
-  lockedView.hidden = true;
-  appView.hidden = true;
-  view.hidden = false;
-}
-
-/* =========================
-   AUTH + ACCESS LOGIC
-========================= */
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    show(loginView);
-    return;
-  }
-
-  try {
-    const ref = doc(db, "users", user.uid);
-    const snap = await getDoc(ref);
-
-    if (!snap.exists()) {
-      show(lockedView);
-      return;
-    }
-
-    const data = snap.data();
-    const meetingApp = data.apps?.meetingApp;
-
-    // ── CASE 1: legacy boolean access ──
-    if (meetingApp === true) {
-      show(appView);
-      return;
-    }
-
-    // ── CASE 2: subscription object ──
-    if (
-      typeof meetingApp === "object" &&
-      meetingApp.active === true &&
-      meetingApp.expiresAt
-    ) {
-      const now = new Date();
-      const expiry = new Date(meetingApp.expiresAt);
-
-      if (now <= expiry) {
-        show(appView);
-        return;
+  
+  // Form validation and styling
+  const forms = document.querySelectorAll('input');
+  forms.forEach(input => {
+    input.addEventListener('blur', () => {
+      if (!input.checkValidity()) {
+        input.style.borderColor = '#ef4444';
+      } else {
+        input.style.borderColor = '#e5e7eb';
       }
+    });
+    
+    // Reset border on input
+    input.addEventListener('input', () => {
+      input.style.borderColor = '#e5e7eb';
+    });
+  });
+  
+  // Prevent form submission on Enter key in inputs
+  document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+      }
+    });
+  });
+  
+  // Initialize with login screen
+  showScreen(loginView);
+  
+  // Prevent pull-to-refresh on mobile
+  document.addEventListener('touchmove', (e) => {
+    if (e.scale !== 1) {
+      e.preventDefault();
     }
-
-    // ── Everything else ──
-    show(lockedView);
-
-  } catch (err) {
-    console.error("Access check failed:", err);
-    show(lockedView);
-  }
+  }, { passive: false });
 });
-
-/* =========================
-   LOGIN HANDLER
-========================= */
-document.getElementById("login-btn").addEventListener("click", async () => {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-
-  // App-level validation
-  if (!email || !password) {
-    showToast("Please enter your email and password.");
-    return;
-  }
-
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    showToast("Welcome back.", "success");
-  } catch (err) {
-    showToast(normalizeAuthError(err), "error");
-  }
-});
-
-
-/* =========================*/
-/*SIGNOUT*/
-import { signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-document.getElementById("logout-btn").addEventListener("click", async () => {
-  await signOut(auth);
-  location.reload(); // ← THIS is the missing clarity step
-});
-
-

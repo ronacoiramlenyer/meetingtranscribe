@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#ffffff">
   <title>Meeting Minutes</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
 
   <div id="app-root">
-
     <!-- LOGIN SCREEN -->
     <div id="login-view" class="screen">
       <div class="card">
@@ -91,13 +93,32 @@
         <input
           id="subscription-code"
           type="text"
-          placeholder="Subscription Code (Required)"
+          placeholder="Subscription Code (Optional)"
           autocomplete="off"
         />
 
+        <div class="plan-selection">
+          <div class="plan-option selected" data-plan="monthly">
+            <div class="plan-header">
+              <span class="plan-name">Monthly</span>
+              <span class="plan-badge">Popular</span>
+            </div>
+            <div class="plan-price">$9.99<span class="period">/month</span></div>
+            <div class="plan-desc">Cancel anytime</div>
+          </div>
+
+          <div class="plan-option" data-plan="yearly">
+            <div class="plan-header">
+              <span class="plan-name">Yearly</span>
+              <span class="plan-badge">Save 30%</span>
+            </div>
+            <div class="plan-price">$83.88<span class="period">/year</span></div>
+            <div class="plan-desc">Billed annually</div>
+          </div>
+        </div>
 
         <div class="terms">
-          <input type="checkbox" id="agree-terms" />
+          <input type="checkbox" id="agree-terms" required />
           <label for="agree-terms">
             I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
           </label>
@@ -163,12 +184,11 @@
         </button>
       </div>
     </div>
-
   </div>
 
   <!-- POPUP MESSAGE -->
   <div id="toast" class="toast" hidden></div>
 
-  <script type="module" src="app.js"></script>
+  <script type="module" src="/app.js"></script>
 </body>
 </html>

@@ -1,11 +1,12 @@
 /* =========================
-   RESET & BASE
+   RESET & BASE - MOBILE FIRST
 ========================= */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
@@ -13,6 +14,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -20,6 +22,7 @@ body {
   color: #1f2933;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
 }
 
 /* =========================
@@ -30,14 +33,21 @@ body {
 }
 
 /* =========================
-   APP ROOT CONTAINER
+   APP ROOT CONTAINER - FULL VIEWPORT
 ========================= */
 #app-root {
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   height: 100svh;
   background: #ffffff;
-  position: relative;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 /* =========================
@@ -45,15 +55,20 @@ body {
 ========================= */
 .screen {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  height: 100dvh;
   height: 100svh;
   background: #ffffff;
   overflow-y: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 0;
   opacity: 0;
   transition: opacity 0.3s ease;
+  will-change: opacity;
 }
 
 .screen:not([hidden]) {
@@ -61,50 +76,62 @@ body {
 }
 
 /* =========================
-   CARD CONTAINER
+   CARD CONTAINER - MOBILE FULL SCREEN
 ========================= */
 .card {
+  position: relative;
   width: 100%;
+  min-height: 100%;
+  min-height: 100dvh;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
   background: #ffffff;
 }
 
 /* =========================
-   CONTENT AREA - FLEXIBLE SPACING
+   CONTENT AREA - PROPER MOBILE SPACING
 ========================= */
 .card > *:not(.back-btn) {
   width: 100%;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: max(1rem, env(safe-area-inset-left, 1rem));
+  padding-right: max(1rem, env(safe-area-inset-right, 1rem));
+  box-sizing: border-box;
 }
 
-/* Header area */
+/* Header area with dynamic safe area */
 .card h1 {
-  padding-top: max(2rem, env(safe-area-inset-top) + 1rem);
+  padding-top: max(2rem, env(safe-area-inset-top, 2rem));
   padding-bottom: 0.5rem;
+  font-size: clamp(1.75rem, 5vw, 2rem);
 }
 
 .card .subtitle {
   padding-top: 0;
-  padding-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  font-size: clamp(1rem, 4vw, 1.125rem);
 }
 
-/* Form elements area */
+/* Form elements with responsive sizing */
 .card input,
 .card button:not(.back-btn) {
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
-  width: calc(100% - 3rem);
+  margin-left: max(1rem, env(safe-area-inset-left, 1rem));
+  margin-right: max(1rem, env(safe-area-inset-right, 1rem));
+  width: calc(100% - max(2rem, env(safe-area-inset-left, 1rem) + env(safe-area-inset-right, 1rem)));
+  font-size: clamp(1rem, 4vw, 1.125rem);
+  padding: clamp(1rem, 4vw, 1.125rem) 1.25rem;
 }
 
 /* Hint area at bottom */
 .card .hint {
   margin-top: auto;
-  padding-top: 2rem;
-  padding-bottom: max(2rem, env(safe-area-inset-bottom) + 1rem);
+  padding-top: 1.5rem;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
 }
 
 /* =========================
@@ -114,12 +141,14 @@ body {
   background: none;
   border: none;
   color: #6366f1;
-  font-size: 1rem;
-  padding: 1rem 1.5rem;
+  font-size: clamp(1rem, 4vw, 1.125rem);
+  padding: 1rem max(1rem, env(safe-area-inset-left, 1rem));
   margin: 0;
   width: auto;
   text-align: left;
   cursor: pointer;
+  z-index: 10;
+  position: relative;
 }
 
 .back-btn:hover {
@@ -135,7 +164,7 @@ body {
   align-items: center;
   text-align: center;
   margin: 1.5rem 0;
-  padding: 0 1.5rem;
+  padding: 0 max(1rem, env(safe-area-inset-left, 1rem));
 }
 
 .divider::before,
@@ -148,7 +177,7 @@ body {
 .divider span {
   padding: 0 1rem;
   color: #9ca3af;
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
 }
 
 /* =========================
@@ -160,6 +189,7 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: color 0.2s ease;
+  font-size: inherit;
 }
 
 .link:hover {
@@ -196,22 +226,23 @@ body {
 }
 
 /* =========================
-   PLAN SELECTION
+   PLAN SELECTION - MOBILE OPTIMIZED
 ========================= */
 .plan-selection {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin: 1.5rem;
+  margin: 1rem max(1rem, env(safe-area-inset-left, 1rem));
 }
 
 .plan-option {
   border: 2px solid #e5e7eb;
   border-radius: 12px;
-  padding: 1.25rem;
+  padding: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
   background: #ffffff;
+  font-size: clamp(0.875rem, 3.5vw, 1rem);
 }
 
 .plan-option:hover {
@@ -232,12 +263,12 @@ body {
 
 .plan-name {
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: clamp(1rem, 4vw, 1.125rem);
   color: #1f2933;
 }
 
 .plan-badge {
-  font-size: 0.75rem;
+  font-size: clamp(0.625rem, 2.5vw, 0.75rem);
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
   background: #6366f1;
@@ -250,21 +281,21 @@ body {
 }
 
 .plan-price {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 5vw, 1.5rem);
   font-weight: 700;
   color: #1f2933;
   margin-bottom: 0.25rem;
 }
 
 .period {
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
   font-weight: 400;
   color: #6b7280;
   margin-left: 0.25rem;
 }
 
 .plan-desc {
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
   color: #6b7280;
 }
 
@@ -275,8 +306,9 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  margin: 1.5rem;
+  margin: 1rem max(1rem, env(safe-area-inset-left, 1rem));
   padding: 0.5rem 0;
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
 }
 
 .terms input[type="checkbox"] {
@@ -287,7 +319,7 @@ body {
 }
 
 .terms label {
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
   color: #6b7280;
   line-height: 1.4;
   cursor: pointer;
@@ -302,7 +334,7 @@ body {
 
 .user-email {
   color: #6b7280;
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
   margin-bottom: 1.5rem;
 }
 
@@ -310,14 +342,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin: 1.5rem;
+  margin: 1rem max(1rem, env(safe-area-inset-left, 1rem));
 }
 
 .app-action-btn {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.25rem;
+  padding: clamp(1rem, 4vw, 1.25rem);
   background: #f9fafb;
   border: 2px solid #e5e7eb;
   border-radius: 12px;
@@ -332,11 +364,11 @@ body {
 }
 
 .action-icon {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 5vw, 1.5rem);
 }
 
 .action-text {
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 3.5vw, 1rem);
   font-weight: 500;
   color: #1f2933;
 }
@@ -345,7 +377,6 @@ body {
    TYPOGRAPHY
 ========================= */
 h1 {
-  font-size: 2rem;
   font-weight: 700;
   color: #1f2933;
   line-height: 1.2;
@@ -353,14 +384,12 @@ h1 {
 }
 
 .subtitle {
-  font-size: 1.125rem;
   color: #6b7280;
   line-height: 1.5;
   font-weight: 400;
 }
 
 .hint {
-  font-size: 0.875rem;
   color: #9ca3af;
   line-height: 1.4;
   text-align: center;
@@ -371,14 +400,12 @@ h1 {
 ========================= */
 input {
   display: block;
-  padding: 1.125rem 1.25rem;
-  margin-bottom: 1rem;
   border-radius: 12px;
   border: 1.5px solid #e5e7eb;
-  font-size: 1rem;
   background: #f9fafb;
   transition: all 0.2s ease;
   color: #1f2933;
+  min-height: 44px;
 }
 
 input:focus {
@@ -397,16 +424,15 @@ input::placeholder {
 ========================= */
 button:not(.back-btn) {
   display: block;
-  padding: 1.125rem 1.25rem;
   border-radius: 12px;
   border: none;
-  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   background: #000000;
   color: #ffffff;
   margin-top: 0.5rem;
+  min-height: 44px;
 }
 
 button:active:not(.back-btn) {
@@ -429,7 +455,7 @@ button:active:not(.back-btn) {
 ========================= */
 .toast {
   position: fixed;
-  bottom: max(2rem, env(safe-area-inset-bottom) + 1rem);
+  bottom: max(2rem, env(safe-area-inset-bottom, 2rem) + 1rem);
   left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: rgba(0, 0, 0, 0.95);
@@ -463,7 +489,7 @@ button:active:not(.back-btn) {
 /* =========================
    RESPONSIVE DESIGN
 ========================= */
-@media (min-width: 768px) {
+@media screen and (min-width: 768px) {
   #app-root {
     max-width: 100%;
     margin: 0 auto;
@@ -491,6 +517,49 @@ button:active:not(.back-btn) {
   
   .plan-option {
     flex: 1;
+  }
+}
+
+/* =========================
+   LANDSCAPE MODE OPTIMIZATION
+========================= */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .card {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+  
+  .card h1 {
+    font-size: 1.5rem;
+    padding-top: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .card .subtitle {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card input,
+  .card button:not(.back-btn) {
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .card .hint {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .plan-selection {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .plan-option {
+    padding: 0.75rem;
   }
 }
 
@@ -614,5 +683,68 @@ button:active:not(.back-btn) {
   
   .terms-link {
     color: #60a5fa;
+  }
+}
+
+/* =========================
+   IOS SPECIFIC FIXES
+========================= */
+@supports (-webkit-touch-callout: none) {
+  #app-root {
+    height: -webkit-fill-available;
+  }
+  
+  .screen {
+    height: -webkit-fill-available;
+  }
+  
+  .card {
+    min-height: -webkit-fill-available;
+  }
+  
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* =========================
+   PREVENT BLUE HIGHLIGHT ON TAP
+========================= */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================
+   SMOOTH SCROLLING
+========================= */
+.screen, .card {
+  scroll-behavior: smooth;
+}
+
+/* =========================
+   FIX FOR VIRTUAL KEYBOARD ON MOBILE
+========================= */
+@media screen and (max-height: 500px) {
+  .card {
+    padding-top: 0.5rem;
+  }
+  
+  .card h1 {
+    padding-top: 0.5rem;
+  }
+}
+
+/* =========================
+   VERY SMALL SCREENS
+========================= */
+@media screen and (max-width: 320px) {
+  .card h1 {
+    font-size: 1.5rem;
+    padding-top: max(1.5rem, env(safe-area-inset-top, 1.5rem));
+  }
+  
+  .card input,
+  .card button:not(.back-btn) {
+    padding: 0.875rem 1rem;
   }
 }
