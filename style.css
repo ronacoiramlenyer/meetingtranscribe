@@ -11,7 +11,6 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
-/* Force mobile rendering */
 html {
   font-size: 16px;
   width: 100vw;
@@ -90,6 +89,7 @@ body {
   margin: 0;
   opacity: 0;
   transition: opacity 0.3s ease;
+  will-change: opacity;
 }
 
 .screen:not([hidden]) {
@@ -97,7 +97,7 @@ body {
 }
 
 /* =========================
-   CARD - FULL MOBILE APP
+   CARD - FULL MOBILE APP WITH PROPER PADDING
 ========================= */
 .card {
   position: relative;
@@ -109,10 +109,7 @@ body {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  padding: env(safe-area-inset-top) max(1rem, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(1rem, env(safe-area-inset-left));
   background: #ffffff;
   margin: 0;
   overflow-x: hidden;
@@ -120,99 +117,108 @@ body {
 }
 
 /* =========================
-   CONTENT CONTAINER - FORCE MOBILE WIDTH
+   CONTENT AREA - PROPER MOBILE SPACING
 ========================= */
-.card-content {
-  width: 100%;
-  max-width: 100vw;
-  padding-left: max(1rem, env(safe-area-inset-left));
-  padding-right: max(1rem, env(safe-area-inset-right));
-  box-sizing: border-box;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Make ALL direct children use card-content constraints */
 .card > *:not(.back-btn) {
   width: 100%;
-  max-width: 100vw;
-  padding-left: max(1rem, env(safe-area-inset-left));
-  padding-right: max(1rem, env(safe-area-inset-right));
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
   box-sizing: border-box;
 }
 
-/* Header area */
+/* Header area with proper spacing */
 .card h1 {
   padding-top: max(2rem, calc(env(safe-area-inset-top) + 1rem));
   padding-bottom: 0.5rem;
-  font-size: min(2rem, 8vw);
+  font-size: clamp(1.75rem, 5vw, 2rem);
+  font-weight: 700;
+  color: #1f2933;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
   text-align: center;
-  width: 100%;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .card .subtitle {
   padding-top: 0;
   padding-bottom: 1.5rem;
-  font-size: min(1.125rem, 5vw);
+  font-size: clamp(1rem, 4vw, 1.125rem);
+  color: #6b7280;
+  line-height: 1.5;
+  font-weight: 400;
   text-align: center;
-  width: 100%;
-  line-height: 1.4;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
-/* =========================
-   FORM ELEMENTS - MOBILE WIDTH
-========================= */
+/* Form elements with proper side padding */
 .card input,
 .card button:not(.back-btn) {
-  width: calc(100% - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
-  max-width: calc(100vw - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
+  max-width: 100%;
+  font-size: clamp(1rem, 4vw, 1.125rem);
+  padding: clamp(1rem, 4vw, 1.125rem) 1rem;
   display: block;
-  font-size: min(1.125rem, 5vw);
-  padding: min(1.125rem, 5vw) min(1.25rem, 5vw);
   box-sizing: border-box;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0.75rem;
 }
 
-/* Hint area */
+/* Make the continue button have some spacing */
+#login-btn, #create-account-btn {
+  margin-top: 0.5rem;
+}
+
+/* Hint area at bottom */
 .card .hint {
   margin-top: auto;
   padding-top: 1.5rem;
   padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem));
-  font-size: min(0.875rem, 4vw);
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
+  color: #9ca3af;
+  line-height: 1.4;
   text-align: center;
-  width: 100%;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 /* =========================
-   BACK BUTTON
+   BACK BUTTON WITH PADDING
 ========================= */
 .back-btn {
   background: none;
   border: none;
   color: #6366f1;
-  font-size: min(1.125rem, 5vw);
-  padding: 1rem max(1rem, env(safe-area-inset-left));
-  margin: 0;
+  font-size: clamp(1rem, 4vw, 1.125rem);
+  padding: 1rem 0.5rem;
+  margin: 0 0 1rem 0.5rem;
   width: auto;
-  max-width: 100vw;
+  max-width: 100%;
   text-align: left;
   cursor: pointer;
   z-index: 10;
+  position: relative;
+}
+
+.back-btn:hover {
+  background: none;
+  color: #4f46e5;
 }
 
 /* =========================
-   DIVIDER
+   DIVIDER WITH PROPER PADDING
 ========================= */
 .divider {
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 1.5rem auto;
-  padding: 0 max(1rem, env(safe-area-inset-left));
-  width: calc(100% - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
-  max-width: calc(100vw - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  margin: 1.5rem 0;
+  padding: 0 0.5rem;
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
 }
 
@@ -226,50 +232,215 @@ body {
 .divider span {
   padding: 0 1rem;
   color: #9ca3af;
-  font-size: min(0.875rem, 4vw);
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
 }
 
 /* =========================
-   PLAN SELECTION
+   LINK STYLES
+========================= */
+.link {
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-size: inherit;
+}
+
+.link:hover {
+  text-decoration: underline;
+  color: #4f46e5;
+}
+
+.terms-link {
+  color: #6366f1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.terms-link:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   LOGIN LINK IN HINT - SPECIFIC STYLING */
+.card .hint .link {
+  color: #6366f1;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.card .hint .link:hover {
+  text-decoration: underline;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+/* =========================
+   PLAN SELECTION WITH PADDING
 ========================= */
 .plan-selection {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin: 1rem auto;
-  width: calc(100% - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
-  max-width: calc(100vw - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  margin: 1rem 0;
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
 }
 
+.plan-option {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ffffff;
+  font-size: clamp(0.875rem, 3.5vw, 1rem);
+}
+
+.plan-option:hover {
+  border-color: #d1d5db;
+}
+
+.plan-option.selected {
+  border-color: #6366f1;
+  background: #f0f9ff;
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.plan-name {
+  font-weight: 600;
+  font-size: clamp(1rem, 4vw, 1.125rem);
+  color: #1f2933;
+}
+
+.plan-badge {
+  font-size: clamp(0.625rem, 2.5vw, 0.75rem);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  background: #6366f1;
+  color: white;
+  font-weight: 500;
+}
+
+.plan-option:nth-child(2) .plan-badge {
+  background: #10b981;
+}
+
+.plan-price {
+  font-size: clamp(1.25rem, 5vw, 1.5rem);
+  font-weight: 700;
+  color: #1f2933;
+  margin-bottom: 0.25rem;
+}
+
+.period {
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
+  font-weight: 400;
+  color: #6b7280;
+  margin-left: 0.25rem;
+}
+
+.plan-desc {
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
+  color: #6b7280;
+}
+
 /* =========================
-   TERMS CHECKBOX
+   TERMS CHECKBOX WITH PADDING
 ========================= */
 .terms {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  margin: 1rem auto;
-  width: calc(100% - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
-  max-width: calc(100vw - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  margin: 1rem 0;
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+  padding: 0.5rem 0;
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
+}
+
+.terms input[type="checkbox"] {
+  margin-top: 0.25rem;
+  width: auto;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.terms label {
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
+  color: #6b7280;
+  line-height: 1.4;
+  cursor: pointer;
 }
 
 /* =========================
-   APP VIEW ELEMENTS
+   APP VIEW SPECIFIC WITH PADDING
 ========================= */
+.app-header {
+  text-align: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.user-email {
+  color: #6b7280;
+  font-size: clamp(0.75rem, 3vw, 0.875rem);
+  margin-bottom: 1.5rem;
+}
+
 .app-actions {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin: 1rem auto;
-  width: calc(100% - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
-  max-width: calc(100vw - max(2rem, calc(env(safe-area-inset-left) + env(safe-area-inset-right))));
+  margin: 1rem 0;
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
 }
 
+.app-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(1rem, 4vw, 1.25rem);
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  text-align: left;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.app-action-btn:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.action-icon {
+  font-size: clamp(1.25rem, 5vw, 1.5rem);
+}
+
+.action-text {
+  font-size: clamp(0.875rem, 3.5vw, 1rem);
+  font-weight: 500;
+  color: #1f2933;
+}
+
 /* =========================
-   INPUTS & BUTTONS
+   INPUTS WITH PROPER PADDING
 ========================= */
 input {
   display: block;
@@ -280,6 +451,7 @@ input {
   color: #1f2933;
   min-height: 44px;
   font-size: 16px; /* Prevent iOS zoom */
+  padding: 1rem !important;
 }
 
 input:focus {
@@ -293,6 +465,9 @@ input::placeholder {
   color: #9ca3af;
 }
 
+/* =========================
+   BUTTONS WITH PROPER PADDING
+========================= */
 button:not(.back-btn) {
   display: block;
   border-radius: 12px;
@@ -304,7 +479,8 @@ button:not(.back-btn) {
   color: #ffffff;
   margin-top: 0.5rem;
   min-height: 44px;
-  font-size: min(1.125rem, 5vw);
+  padding: 1rem !important;
+  width: 100%;
 }
 
 button:active:not(.back-btn) {
@@ -323,18 +499,6 @@ button:active:not(.back-btn) {
 }
 
 /* =========================
-   LINK STYLES
-========================= */
-.link {
-  color: #6366f1;
-  text-decoration: none;
-  font-weight: 500;
-  cursor: pointer;
-  transition: color 0.2s ease;
-  font-size: inherit;
-}
-
-/* =========================
    TOAST POPUP
 ========================= */
 .toast {
@@ -348,10 +512,14 @@ button:active:not(.back-btn) {
   border-radius: 12px;
   font-size: 0.95rem;
   max-width: min(90vw, 400px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   z-index: 10000;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .toast.show {
@@ -359,8 +527,16 @@ button:active:not(.back-btn) {
   transform: translateX(-50%) translateY(0);
 }
 
+.toast.error {
+  background: rgba(185, 28, 28, 0.95);
+}
+
+.toast.success {
+  background: rgba(4, 120, 87, 0.95);
+}
+
 /* =========================
-   DESKTOP FALLBACK
+   DESKTOP/TABLET RESPONSIVE
 ========================= */
 @media screen and (min-width: 768px) and (min-height: 600px) {
   body {
@@ -395,29 +571,219 @@ button:active:not(.back-btn) {
     min-height: auto;
     max-height: none;
     border-radius: 24px;
-  }
-}
-
-/* =========================
-   MOBILE FORCE - NO MEDIA QUERY OVERRIDES
-========================= */
-@media screen and (max-width: 767px) {
-  html, body, #app-root, .screen, .card {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border-radius: 0 !important;
+    padding: 2.5rem 2rem;
   }
   
-  .card > * {
-    width: 100vw !important;
-    max-width: 100vw !important;
+  .card h1,
+  .card .subtitle,
+  .card .hint {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .card input,
+  .card button:not(.back-btn) {
+    padding: 1.125rem 1.25rem !important;
+  }
+  
+  .plan-selection {
+    flex-direction: row;
+  }
+  
+  .plan-option {
+    flex: 1;
   }
 }
 
 /* =========================
-   CRITICAL IOS FIXES
+   MOBILE FORCE - BUT KEEP PADDING
+========================= */
+@media screen and (max-width: 767px) {
+  .card {
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+  }
+  
+  .card h1,
+  .card .subtitle,
+  .card .hint {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  .card input,
+  .card button:not(.back-btn) {
+    padding: 1rem !important;
+  }
+}
+
+/* =========================
+   LANDSCAPE MODE OPTIMIZATION
+========================= */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .card {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .card h1 {
+    font-size: 1.5rem;
+    padding-top: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .card .subtitle {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card input,
+  .card button:not(.back-btn) {
+    padding: 0.75rem !important;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card .hint {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .plan-selection {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .plan-option {
+    padding: 0.75rem;
+  }
+}
+
+/* =========================
+   DARK MODE SUPPORT
+========================= */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #000000;
+    color: #ffffff;
+  }
+  
+  #app-root,
+  .screen,
+  .card {
+    background: #000000;
+  }
+  
+  h1 {
+    color: #ffffff;
+  }
+  
+  .subtitle {
+    color: #d1d5db;
+  }
+  
+  .hint {
+    color: #9ca3af;
+  }
+  
+  /* Login link in dark mode */
+  .card .hint .link {
+    color: #60a5fa;
+  }
+  
+  .card .hint .link:hover {
+    background: rgba(96, 165, 250, 0.1);
+  }
+  
+  input {
+    background: #111827;
+    border-color: #374151;
+    color: #ffffff;
+  }
+  
+  input:focus {
+    background: #1f2933;
+    border-color: #6366f1;
+  }
+  
+  input::placeholder {
+    color: #6b7280;
+  }
+  
+  button:not(.back-btn) {
+    background: #ffffff;
+    color: #000000;
+  }
+  
+  button:not(.back-btn):active {
+    background: #e5e7eb;
+  }
+  
+  .secondary-btn {
+    background: #374151;
+    color: #ffffff;
+    border-color: #4b5563;
+  }
+  
+  .secondary-btn:active {
+    background: #4b5563;
+  }
+  
+  .back-btn {
+    color: #60a5fa;
+  }
+  
+  .back-btn:hover {
+    color: #93c5fd;
+  }
+  
+  .divider span {
+    color: #6b7280;
+  }
+  
+  .divider::before,
+  .divider::after {
+    border-color: #374151;
+  }
+  
+  .plan-option {
+    background: #111827;
+    border-color: #374151;
+  }
+  
+  .plan-option.selected {
+    background: #1e3a8a;
+    border-color: #6366f1;
+  }
+  
+  .plan-name {
+    color: #ffffff;
+  }
+  
+  .plan-price {
+    color: #ffffff;
+  }
+  
+  .app-action-btn {
+    background: #111827;
+    border-color: #374151;
+  }
+  
+  .app-action-btn:hover {
+    background: #1f2933;
+  }
+  
+  .action-text {
+    color: #ffffff;
+  }
+  
+  .terms-link {
+    color: #60a5fa;
+  }
+}
+
+/* =========================
+   IOS SPECIFIC FIXES
 ========================= */
 @supports (-webkit-touch-callout: none) {
   html, body {
@@ -436,47 +802,54 @@ button:active:not(.back-btn) {
     min-height: -webkit-fill-available;
   }
   
-  /* Prevent iOS zoom on input focus */
-  input, textarea {
+  input, select, textarea {
     font-size: 16px !important;
   }
+}
+
+/* =========================
+   PREVENT BLUE HIGHLIGHT ON TAP
+========================= */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================
+   SMOOTH SCROLLING
+========================= */
+.screen, .card {
+  scroll-behavior: smooth;
+}
+
+/* =========================
+   FIX FOR VIRTUAL KEYBOARD ON MOBILE
+========================= */
+@media screen and (max-height: 500px) {
+  .card {
+    padding-top: 0.5rem;
+  }
   
-  /* Prevent elastic scrolling */
-  body {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-  }
-}
-
-/* =========================
-   ANDROID CHROME FIX
-========================= */
-@supports (-webkit-touch-callout: none) and (not (-webkit-overflow-scrolling: touch)) {
-  html, body {
-    height: 100%;
-    position: fixed;
-    overflow: hidden;
-  }
-}
-
-/* =========================
-   VIEWPORT HEIGHT FALLBACK
-========================= */
-@media (max-height: 500px) {
   .card h1 {
-    padding-top: max(1rem, env(safe-area-inset-top));
-    font-size: min(1.5rem, 7vw);
+    padding-top: 0.5rem;
+  }
+}
+
+/* =========================
+   VERY SMALL SCREENS - EXTRA PADDING
+========================= */
+@media screen and (max-width: 320px) {
+  .card {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
   }
   
-  .card .subtitle {
-    padding-bottom: 1rem;
-    font-size: min(1rem, 4.5vw);
+  .card h1 {
+    font-size: 1.5rem;
+    padding-top: max(1.5rem, env(safe-area-inset-top, 1.5rem));
   }
   
   .card input,
   .card button:not(.back-btn) {
-    padding: 0.75rem 1rem;
-    margin-bottom: 0.5rem;
+    padding: 0.875rem !important;
   }
 }
