@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Meeting Minutes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="app-root">
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-view" class="screen">
+      <div class="card">
+        <h1>Meeting Minutes</h1>
+        <p class="subtitle">
+          Capture decisions, not just discussions.
+        </p>
+
+        <input
+          id="email"
+          type="email"
+          inputmode="email"
+          placeholder="Email address"
+          autocomplete="username"
+          required
+        />
+
+        <input 
+          id="password" 
+          type="password" 
+          placeholder="Password" 
+          autocomplete="current-password"
+          required
+        />
+
+        <button id="login-btn" type="button">Continue</button>
+
+        <div class="divider">
+          <span>or</span>
+        </div>
+
+        <button id="subscribe-btn" class="secondary-btn" type="button">
+          No Account yet?
+        </button>
+
+        <p class="hint">
+          Secure access. Your sessions are saved automatically.
+        </p>
+      </div>
+    </div>
+
+    <!-- SUBSCRIPTION/REGISTRATION SCREEN -->
+    <div id="subscribe-view" class="screen" hidden>
+      <div class="card">
+        <button id="back-btn" class="back-btn" type="button">
+          ← Back
+        </button>
+
+        <h1>Create Account</h1>
+        <p class="subtitle">
+          Register and subscribe to get started.
+        </p>
+
+        <input
+          id="reg-email"
+          type="email"
+          inputmode="email"
+          placeholder="Email address"
+          autocomplete="email"
+          required
+        />
+
+        <input
+          id="reg-password"
+          type="password"
+          placeholder="Create Password"
+          autocomplete="new-password"
+          required
+        />
+
+        <input
+          id="confirm-password"
+          type="password"
+          placeholder="Confirm Password"
+          autocomplete="new-password"
+          required
+        />
+
+        <input
+          id="subscription-code"
+          type="text"
+          placeholder="Subscription Code (Required)"
+          autocomplete="off"
+        />
+
+
+        <div class="terms">
+          <input type="checkbox" id="agree-terms" />
+          <label for="agree-terms">
+            I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button id="create-account-btn" type="button">Create Account & Subscribe</button>
+
+        <p class="hint">
+          Already have an account? <a href="#" id="login-link" class="link">Login here</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- LOCKED SCREEN -->
+    <div id="locked-view" class="screen" hidden>
+      <div class="card">
+        <h1>Access Locked</h1>
+        <p class="subtitle">
+          Your subscription is inactive or has expired.
+        </p>
+
+        <button id="manage-subscription-btn" class="secondary-btn">
+          Manage Subscription
+        </button>
+
+        <p class="hint">
+          You can reactivate access anytime.
+        </p>
+      </div>
+    </div>
+
+    <!-- APP MAIN SCREEN -->
+    <div id="app-view" class="screen" hidden>
+      <div class="card">
+        <div class="app-header">
+          <h1>Welcome</h1>
+          <div class="user-email" id="user-email">user@example.com</div>
+        </div>
+        
+        <p class="subtitle">
+          You're ready to start recording meaningful meetings.
+        </p>
+
+        <div class="app-actions">
+          <button class="app-action-btn">
+            <span class="action-icon">📝</span>
+            <span class="action-text">New Meeting</span>
+          </button>
+          
+          <button class="app-action-btn">
+            <span class="action-icon">📋</span>
+            <span class="action-text">View History</span>
+          </button>
+          
+          <button class="app-action-btn">
+            <span class="action-icon">⚙️</span>
+            <span class="action-text">Settings</span>
+          </button>
+        </div>
+
+        <button id="logout-btn" class="secondary-btn">
+          Logout
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- POPUP MESSAGE -->
+  <div id="toast" class="toast" hidden></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

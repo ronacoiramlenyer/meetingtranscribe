@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – Subscription Codes</title>
+</head>
+<body>
+
+  <h2>Admin Console – Generate Subscription Code</h2>
+
+  <div id="not-admin" hidden>
+    <p>Access denied. Admins only.</p>
+  </div>
+
+  <div id="admin-panel" hidden>
+    <label>
+      Duration (days):
+      <input id="duration" type="number" value="30" />
+    </label>
+    <br /><br />
+    <button id="generate-btn">Generate Code</button>
+
+    <h3>Generated Code</h3>
+    <pre id="output">—</pre>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
